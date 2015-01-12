@@ -1,4 +1,4 @@
-import holepunch.introducer
+import holepunch.server
 
 
 def parse_args():
@@ -9,13 +9,13 @@ def parse_args():
         parser.add_argument(
                 "protocol",
                 type=str,
-                choices=["udp", "tcp"]
+                choices=["udp", "tcp"],
                 help="protocol name"
                 )
 
         parser.add_argument(
                 "port",
-                type=str,
+                type=int,
                 help="port name"
                 )
 
@@ -28,8 +28,9 @@ def main():
     args = parse_args()
 
     if args.protocol == "tcp":
-        server = holepunch.server.TCPServer(args.port)
-    else if args.protocol = "udp":
+        #server = holepunch.server.TCPServer(args.port)
+        server = holepunch.server.Server(args.port)
+    elif args.protocol == "udp":
         server = holepunch.server.UDPServer(args.port)
 
     server.run()
