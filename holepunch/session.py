@@ -18,6 +18,7 @@ class Session(threading.Thread):
             print(addr)
 
     def _close(self):
+        self._conn.shutdown(socket.SHUT_RDWR)
         self._conn.close()
 
     def _parse(self, data):
@@ -34,13 +35,3 @@ class Session(threading.Thread):
             self._handle(data)
 
         self._close()
-
-    def run(self):
-        self._conn.settimeout(10)
-
-        try:
-            data = self._conn.recv(1024)
-        except socket.timeout:
-            pass
-        else:
-            self._handle(data)

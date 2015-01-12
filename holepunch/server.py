@@ -2,6 +2,7 @@ import socket
 import queue
 
 import holepunch.session
+import holepunch.config
 
 
 class Server:
@@ -17,26 +18,16 @@ class Server:
 
     def run(self):
         while True:
-            conn, addr = self._socket.accept()
-
-            client = holepunch.client.Client(conn, addr)
-            client.start()
-
-            self._clients.append(client)
+            dready, wready, xready = select.select(rlist, wlist, xlist)
 
 
-class Client(threading.Thread):
+class Client:
 
     def __init__(self, conn, addr):
         self._conn = conn
         self._addr = addr
 
-    def run(self):
-        while True:
-            data = self._conn.recv(1024)
-            if not data:
-                break
-
-            self._handle(data)
-
-        self._conn.close()
+    def 
+    http://ilab.cs.byu.edu/python/threadingmodule.html
+    http://ilab.cs.byu.edu/python/select/echoserver.html
+    https://pythonadventures.wordpress.com/2013/07/06/a-basic-socket-client-server-example/
