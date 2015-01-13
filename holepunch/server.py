@@ -70,6 +70,8 @@ class Server:
         self._rlist.remove(client._conn)
 
 
+http://basyl.co.uk/code/punch/doc/files/Readme-txt.html
+
 class Client:
 
     def __init__(self, server, conn, addr):
@@ -79,7 +81,7 @@ class Client:
 
     def recv(self):
         data = self._conn.recv(holepunch.config.BUFSIZE)
-        return holepunch.protocol.Request(data)
+        return Request(data)
 
     def send(self, response):
         self._conn.sendall(response.encode("utf-8"))
@@ -89,27 +91,27 @@ class Client:
 
         if request.method == "INTRODUCE":
             client = self._server.find_client(addr=request.data)
-
-            if client is None:
-                responce = holepunch.protocol.Response(method="OK")
-
-                logging.info("Client%s is introduced to Client%s.", self._addr, request.data)
-            else:
-                responce = holepunch.protocol.Response(method="NOT FOUND")
-
-                logging.info("Client%s is not found.", request.data)
+            if client is not None:
+                self.send(Response("HOLEPUNCH", client._addr))
+                client.send(Response("HOLEPUNCH", self._addr))
 
         elif request.method == "CLOSE":
-            responce = holepunch.protocol.Response(method="CLIENT CLOSED REQUEST")
-
             self._conn.close()
             self._server.remove_client(self)
 
-            logging.info("Server%s is disconnected from Client%s.", self._server._addr, self._addr)
-
         else:
-            responce = holepunch.protocol.Response(method="BAD REQUEST")
+            self.send(Response("BAD REQUEST"))
 
-            logging.info("Client%s request is bad.", request.data)
+        logging.info("Server%s is handling request from Client%s.", self._server._addr, self._addr)
 
-        self.send(response)
+
+class Request:
+
+    def __init__(self, data):
+        self._data = data
+
+
+class Response:
+
+    def __init__(self, code=None, method=None, data=None):
+        pass
