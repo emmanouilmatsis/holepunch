@@ -13,12 +13,6 @@ def parse_args():
                 help="protocol name"
                 )
 
-        parser.add_argument(
-                "port",
-                type=int,
-                help="port name"
-                )
-
         args = parser.parse_args()
 
         return args
@@ -28,10 +22,9 @@ def main():
     args = parse_args()
 
     if args.protocol == "tcp":
-        #server = holepunch.server.TCPServer(args.port)
-        server = holepunch.server.Server(args.port)
+        server = holepunch.server.Server()
     elif args.protocol == "udp":
-        server = holepunch.server.UDPServer(args.port)
+        server = holepunch.server.Server()
 
     server.run()
 
