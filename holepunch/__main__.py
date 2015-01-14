@@ -7,10 +7,10 @@ def parse_args():
         parser = argparse.ArgumentParser(description="Holepunch")
 
         parser.add_argument(
-                "protocol",
+                "type",
                 type=str,
-                choices=["udp", "tcp"],
-                help="protocol name"
+                choices=["server", "client"],
+                help="application type"
                 )
 
         args = parser.parse_args()
@@ -21,12 +21,10 @@ def parse_args():
 def main():
     args = parse_args()
 
-    if args.protocol == "tcp":
-        server = holepunch.server.Server()
-    elif args.protocol == "udp":
-        server = holepunch.server.Server()
-
-    server.run()
+    if args.protocol == "server":
+        holepunch.server.Server().run()
+    elif args.protocol == "client":
+        holepunch.client.Client().run()
 
 
 if __name__ == "__main__":
