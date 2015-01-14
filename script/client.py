@@ -1,4 +1,5 @@
 import socket
+http://stackoverflow.com/questions/23249787/problems-with-tcp-hole-punching
 
 
 def server():
