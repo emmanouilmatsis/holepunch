@@ -10,6 +10,4 @@ logging.basicConfig(
 HOST = ""
 PORT = 1234
 BACKLOG = 5
-BUFSIZE = 1024
-
-WORKERS_SIZE = 32
+BUFSIZE = 65535

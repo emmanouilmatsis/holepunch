@@ -21,9 +21,9 @@ def parse_args():
 def main():
     args = parse_args()
 
-    if args.protocol == "server":
+    if args.type == "server":
         holepunch.server.Server().run()
-    elif args.protocol == "client":
+    elif args.type == "client":
         holepunch.client.Client().run()
 
 

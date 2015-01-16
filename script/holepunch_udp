@@ -12,7 +12,7 @@ def udp_holepunch(source_host, source_port, dest_host, dest_port):
 
     sock.bind((source_host, int(source_port)))
 
-    sock.sendto(b"", (dest_host, int(dest_port)))
+    sock.sendto(b">", (dest_host, int(dest_port)))
 
     return sock
 
