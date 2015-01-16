@@ -147,13 +147,16 @@ class Message:
     def __bytes__(self):
         pass
 
-    def validate(self, data):
-        isMethod = data[0] in [">", "<", "!", "?"]
-        isBody
-
     def parse(self, data):
-        method = data[0]
-        body = data[1:]
+        if data[0] in [">", "<", "!", "?"]:
+            self._method = data[0]
 
-        if method in [">", "<", "!", "?"]:
-            if method == ">":
+            if data[0] == ">":
+                if data[1:] != "":
+                    host, port = data[1:].split(":")
+                    self._body = (host, int(port))
+            else:
+                self._body = ""
+        else:
+            self._method = "?"
+            self._body = ""
