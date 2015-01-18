@@ -7,7 +7,8 @@ logging.basicConfig(
     level=logging.DEBUG
 )
 
-HOST = ""
-PORT = 1234
-BACKLOG = 5
-BUFSIZE = 65535
+SERVER_HOST = ""
+SERVER_PORT = 20000
+
+CLIENT_HOST = ""
+CLIENT_PORT = 20001

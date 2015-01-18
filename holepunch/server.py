@@ -3,13 +3,14 @@ import select
 import socket
 
 import holepunch.config
+import holepunch.message
 
 
 class Server:
 
     def __init__(self):
         self._sock = None
-        self._addr = (holepunch.config.HOST, holepunch.config.PORT)
+        self._addr = (holepunch.config.SERVER_HOST, holepunch.config.SERVER_PORT)
 
         self._rlist = [self]
         self._wlist = []
@@ -105,8 +106,8 @@ class Client:
         self._server.remove_client(self)
 
     def recv(self):
-        data = self._sock.recv(holepunch.config.BUFSIZE)
-        return Message(data)
+        data = self._sock.recv(65535)
+        return holepunch.message.Message(data)
 
     def send(self, message):
         self._sock.sendall(message)
@@ -114,49 +115,20 @@ class Client:
     def handle(self):
         logging.info("Handle client%s", self._addr)
 
-        data = self.recv()
+        message = self.recv()
 
-        if not data:
-            self.close()
+        if message.method = ">":
+            client = self._server.find_client(message.body)
 
-
-class Message:
-
-    @property
-    def method(self):
-        return self._method
-
-    @method.setter
-    def method(self, value):
-        self._method = value
-
-    @property
-    def body(self):
-        return self._body
-
-    @body.setter
-    def body(self, value):
-        self._body = value
-
-    def __init__(self, data):
-        self._method = None
-        self._body = None
-
-        self.parse(data)
-
-    def __bytes__(self):
-        pass
-
-    def parse(self, data):
-        if data[0] in [">", "<", "!", "?"]:
-            self._method = data[0]
-
-            if data[0] == ">":
-                if data[1:] != "":
-                    host, port = data[1:].split(":")
-                    self._body = (host, int(port))
+            if client:
+                message.body = "{0}:{1}".format(self._addr[0], self_addr[1])
+                client.send(message)
             else:
-                self._body = ""
-        else:
-            self._method = "?"
-            self._body = ""
+                message.body = "!"
+                self.send(message)
+
+        elif message.method = "?":
+            self.send(message)
+
+        elif message.method = ".":
+            self.close()
