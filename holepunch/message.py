@@ -22,18 +22,28 @@ class Message:
 
         self.parse(data)
 
+    def __repr__(self):
+        return "Message({0}{1})".format(self._method, self._body)
+
+    def __str__(self):
+        return "{0}{1}".format(self._method, self._body)
+
     def __bytes__(self):
-        pass
+        return bytes("{0}{1}".format(self._method, self._body), "utf-8")
+
+    def __format__(self, format_spec=""):
+        return "{0}{1}".format(self._method, self._body)
 
     def parse(self, data):
         if data:
-            if data[0] in [">", "<", "!", "?"]:
+            if data[0] in ["<", ">", "!", "?"]:
                 self._method = data[0]
 
-                if data[0] == ">":
-                    if data[1:] != "":
-                        host, port = data[1:].split(":")
-                        self._body = (host, int(port))
+                if data[0] == "<":
+                    self._body = data[1:]
+                elif data[0] == ">":
+                    host, port = data[1:].split(":")
+                    self._body = (host, int(port))
                 else:
                     self._body = ""
             else:

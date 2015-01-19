@@ -6,37 +6,95 @@ import holepunch.config
 import holepunch.message
 
 
-class Client:
+class Server:
+
+    @property
+    def sock(self):
+        return self._sock
+
+    @sock.setter
+    def sock(self, value):
+        self._sock = value
+
+    @property
+    def addr(self):
+        return self._addr
+
+    @addr.setter
+    def addr(self, value):
+        self._addr = value
 
     def __init__(self):
-        self._server_sock = None
-        self._server_addr = (holepunch.config.SERVER_HOST, holepunch.config.SERVER_PORT)
+        self._sock = None
+        self._addr = (holepunch.config.SERVER_HOST, holepunch.config.SERVER_PORT)
 
     def open(self):
-        logging.info("Open client%s", self._addr)
+        self._sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+        self._sock.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
+        self._sock.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEPORT, 1)
+        self._sock.connect(self._addr)
 
-        self._server_sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-        self._server_sock.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
-        self._server_sock.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEPORT, 1)
-        self._server_sock.connect(self._server_addr)
+        logging.info("Open client - server socket %s", self._sock)
 
     def close(self):
-        logging.info("Close client%s", self._addr)
+        self._sock.close()
 
-        self._server_sock.close()
+        logging.info("Open client - server socket %s", self._sock)
 
-    def connect(self, dest_addr):
-        request = holepunch.message.Message(">{0}:{1}".format(dest_addr[0], dest_addr[1]))
-        self._server_sock.sendall(message)
+    def recv(self):
+        data = self._sock.recv(65535)
+        return holepunch.message.Message(data)
 
-        response = self._server_sock.recv(65535)
+    def send(self, message):
+        self._sock.sendall(message)
 
-        if response.method == ">":
-            source_addr = ()
-            dest_addr = response.body
-            return self.holepunch(source_addr, dest_addr)
+
+class Client:
+
+    @property
+    def sock(self):
+        return self._sock
+
+    @sock.setter
+    def sock(self, value):
+        self._sock = value
+
+    @property
+    def addr(self):
+        return self._addr
+
+    @addr.setter
+    def addr(self, value):
+        self._addr = value
+
+    def __init__(self):
+        self._server = Server()
+        self._sock = None
+        self._addr = None
+
+    def open(self, dest_host):
+        self._server.open()
+
+        message = holepunch.message.Message("<{0}".format(dest_host))
+        self._server.send(message)
+
+        message = self._server.recv()
+        if message.method == ">":
+            source_addr = ("", message.body[1])
+            dest_addr = message.body
+            self._sock, self._addr = self.holepunch(source_addr, dest_addr)
         else:
-            return None
+            raise Exception(message)
+
+        logging.info("Open client - client socket %s", self._sock)
+
+    def close(self):
+        self._server.close()
+
+        self._sock.close()
+        self._addr = None
+
+        logging.info("Close client - client socket %s", self._sock)
 
     def holepunch(self, source_addr, dest_addr):
         raise NotImplementedError
@@ -56,7 +114,7 @@ class UDPClient(Client):
 
         sock.sendto(b">", dest_addr)
 
-        return sock
+        return (sock, dest_addr)
 
 
 class TCPClient(Client):
@@ -73,4 +131,4 @@ class TCPClient(Client):
 
         while sock.connect_ex(dest_addr): pass
 
-        return sock
+        return (sock, dest_addr)

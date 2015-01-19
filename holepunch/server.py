@@ -20,18 +20,18 @@ class Server:
         return self._sock.fileno()
 
     def open(self):
-        logging.info("Open server%s", self._addr)
-
         self._sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
         self._sock.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
         self._sock.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEPORT, 1)
         self._sock.bind(self._addr)
         self._sock.listen(5)
 
-    def close(self):
-        logging.info("Close server%s", self._addr)
+        logging.info("Open server socket %s", self._sock)
 
+    def close(self):
         self._sock.close()
+
+        logging.info("Close server socket %s", self._sock)
 
     def run(self):
         self.open()
@@ -56,9 +56,9 @@ class Server:
         client = Client(self, sock, addr)
         client.open()
 
-    def find_client(self, sock=None, addr=None):
+    def find_client(self, sock=None, host=None, port=None):
         for r in self._self._rlist:
-            if r.sock == sock or r.addr == addr:
+            if r.sock == sock or r.addr[0] == host or r.addr[1] == port:
                 return r
         return None
 
@@ -96,14 +96,14 @@ class Client:
         return self._sock.fileno()
 
     def open(self):
-        logging.info("Open client%s", self._addr)
-
         self._server.append_client(self)
 
-    def close(self):
-        logging.info("Close client%s", self._addr)
+        logging.info("Open server - client socket %s", self._sock)
 
+    def close(self):
         self._server.remove_client(self)
+
+        logging.info("Close server - client socket %s", self._sock)
 
     def recv(self):
         data = self._sock.recv(65535)
@@ -113,22 +113,23 @@ class Client:
         self._sock.sendall(message)
 
     def handle(self):
-        logging.info("Handle client%s", self._addr)
-
         message = self.recv()
 
-        if message.method = ">":
-            client = self._server.find_client(message.body)
+        if message.method = "<":
+            client = self._server.find_client(host=message.body)
 
             if client:
-                message.body = "{0}:{1}".format(self._addr[0], self_addr[1])
+                message = holepunch.message.Message(">{0}:{1}".format(self._addr[0], config.HOLEPUNCH_PORT))
                 client.send(message)
             else:
-                message.body = "!"
+                message = holepunch.message.Message("?")
                 self.send(message)
 
-        elif message.method = "?":
+        elif message.method = "!":
+            message = holepunch.message.Message("!")
             self.send(message)
 
         elif message.method = ".":
             self.close()
+
+        logging.info("Handle server - client socket %s", self._sock)
