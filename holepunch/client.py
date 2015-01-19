@@ -72,13 +72,15 @@ class Client:
         self._sock = None
         self._addr = None
 
-    def open(self, dest_host):
+    def open(self, dest_host=None):
         self._server.open()
 
-        message = holepunch.message.Message("<{0}".format(dest_host))
-        self._server.send(message)
+        if dest_host is not None:
+            message = holepunch.message.Message("<{0}".format(dest_host))
+            self._server.send(message)
 
         message = self._server.recv()
+
         if message.method == ">":
             source_addr = ("", message.body[1])
             dest_addr = message.body
