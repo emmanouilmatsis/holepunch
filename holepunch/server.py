@@ -8,6 +8,22 @@ import holepunch.message
 
 class Server:
 
+    @property
+    def sock(self):
+        return self._sock
+
+    @sock.setter
+    def sock(self, value):
+        self._sock = value
+
+    @property
+    def addr(self):
+        return self._addr
+
+    @addr.setter
+    def addr(self, value):
+        self._addr = value
+
     def __init__(self):
         self._sock = None
         self._addr = (holepunch.config.SERVER_HOST, holepunch.config.SERVER_PORT)
@@ -57,7 +73,7 @@ class Server:
         client.open()
 
     def find_client(self, sock=None, host=None, port=None):
-        for r in self._self._rlist:
+        for r in self._rlist:
             if r.sock == sock or r.addr[0] == host or r.addr[1] == port:
                 return r
         return None
@@ -105,31 +121,32 @@ class Client:
 
         logging.info("Close server - client socket %s", self._sock)
 
-    def recv(self):
-        data = self._sock.recv(65535)
+    def recv(self): # TODO
+        data = self._sock.recv(65535).decode("utf-8")
         return holepunch.message.Message(data)
 
-    def send(self, message):
-        self._sock.sendall(message)
+    def send(self, message): # TODO
+        self._sock.sendall(bytes(message))
 
     def handle(self):
         message = self.recv()
+        print(message)
 
-        if message.method = "<":
+        if message.method == "<":
             client = self._server.find_client(host=message.body)
 
             if client:
-                message = holepunch.message.Message(">{0}:{1}".format(self._addr[0], config.HOLEPUNCH_PORT))
+                message = holepunch.message.Message(">{0}:{1}".format(self._addr[0], holepunch.config.HOLEPUNCH_PORT))
                 client.send(message)
             else:
                 message = holepunch.message.Message("?")
                 self.send(message)
 
-        elif message.method = "!":
+        elif message.method == "!":
             message = holepunch.message.Message("!")
             self.send(message)
 
-        elif message.method = ".":
+        elif message.method == ".":
             self.close()
 
         logging.info("Handle server - client socket %s", self._sock)

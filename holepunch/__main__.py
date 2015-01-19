@@ -1,4 +1,5 @@
 import holepunch.server
+import holepunch.client
 
 
 def parse_args():
@@ -13,6 +14,14 @@ def parse_args():
                 help="application type"
                 )
 
+        parser.add_argument(
+                "-d",
+                "--destination",
+                type=str,
+                default=None,
+                help="destination host"
+                )
+
         args = parser.parse_args()
 
         return args
@@ -24,7 +33,7 @@ def main():
     if args.type == "server":
         holepunch.server.Server().run()
     elif args.type == "client":
-        holepunch.client.Client().run()
+        holepunch.client.TCPClient().open(args.destination)
 
 
 if __name__ == "__main__":

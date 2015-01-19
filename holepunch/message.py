@@ -42,8 +42,7 @@ class Message:
                 if data[0] == "<":
                     self._body = data[1:]
                 elif data[0] == ">":
-                    host, port = data[1:].split(":")
-                    self._body = (host, int(port))
+                    self._body = eval(data[1:])
                 else:
                     self._body = ""
             else:

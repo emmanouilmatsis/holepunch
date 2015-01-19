@@ -41,12 +41,12 @@ class Server:
 
         logging.info("Open client - server socket %s", self._sock)
 
-    def recv(self):
-        data = self._sock.recv(65535)
+    def recv(self): # TODO
+        data = self._sock.recv(65535).decode("utf-8")
         return holepunch.message.Message(data)
 
-    def send(self, message):
-        self._sock.sendall(message)
+    def send(self, message): # TODO
+        self._sock.sendall(bytes(message))
 
 
 class Client:
@@ -125,6 +125,8 @@ class TCPClient(Client):
         super().__init__()
 
     def holepunch(self, source_addr, dest_addr):
+        logging.info("Holepunch client - client socket %s", self._sock)
+
         sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
         sock.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
         sock.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEPORT, 1)
