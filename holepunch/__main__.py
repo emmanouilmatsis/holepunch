@@ -8,7 +8,7 @@ def parse_args():
         parser = argparse.ArgumentParser(description="Holepunch")
 
         parser.add_argument(
-                "type",
+                "application",
                 type=str,
                 choices=["server", "client"],
                 help="application type"
@@ -30,9 +30,9 @@ def parse_args():
 def main():
     args = parse_args()
 
-    if args.type == "server":
+    if args.application == "server":
         holepunch.server.Server().run()
-    elif args.type == "client":
+    elif args.application == "client":
         holepunch.client.TCPClient().open(args.destination)
 
 

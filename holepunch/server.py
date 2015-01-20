@@ -121,22 +121,22 @@ class Client:
 
         logging.info("Close server - client socket %s", self._sock)
 
-    def recv(self): # TODO
-        data = self._sock.recv(65535).decode("utf-8")
-        return holepunch.message.Message(data)
+    def send(self, message):
+        data = bytes(message)
+        self._sock.sendall(data)
 
-    def send(self, message): # TODO
-        self._sock.sendall(bytes(message))
+    def recv(self):
+        data = self._sock.recv(65535)
+        return holepunch.message.Message(data.decode("utf-8"))
 
     def handle(self):
         message = self.recv()
-        print(message)
 
         if message.method == "<":
             client = self._server.find_client(host=message.body)
 
             if client:
-                message = holepunch.message.Message(">{0}:{1}".format(self._addr[0], holepunch.config.HOLEPUNCH_PORT))
+                message = holepunch.message.Message(">{0}".format((self._addr[0], holepunch.config.HOLEPUNCH_PORT)))
                 client.send(message)
             else:
                 message = holepunch.message.Message("?")
