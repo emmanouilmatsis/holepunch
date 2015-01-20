@@ -134,6 +134,8 @@ class Client:
 
         message = self.recv()
 
+        print(message)
+
         if message.method == "<":
             client = self._server.find_client(host=message.body)
 
