@@ -39,7 +39,7 @@ class Server:
     def close(self):
         self._sock.close()
 
-        logging.info("Open client - server socket %s", self._sock)
+        logging.info("Close client - server socket %s", self._sock)
 
     def send(self, message):
         data = bytes(message)
@@ -56,12 +56,13 @@ class Server:
     def recv_request(self):
         message = self.recv()
 
-        if message.method == ">":
-            source_addr = ("", message.body[1])
-            dest_addr = message.body
-            return source_addr, dest_addr
-        else:
+        if message.method != ">":
             raise Exception(message)
+
+        source_addr = ("", message.body[1])
+        dest_addr = message.body
+
+        return source_addr, dest_addr
 
 class Client:
 
@@ -91,14 +92,14 @@ class Client:
 
         if dest_host is not None:
             self._server.send_request(dest_host)
-
-        source_addr, dest_addr = self._server.recv_request()
-
-        self._sock, self._addr = self.holepunch(source_addr, dest_addr)
-
-        self._server.send_request(dest_addr)
+            source_addr, dest_addr = self._server.recv_request()
+        else:
+            source_addr, dest_addr = self._server.recv_request()
+            self._server.send_request(dest_addr)
 
         self._server.close()
+
+        self._sock, self._addr = self.holepunch(source_addr, dest_addr)
 
         logging.info("Open client - client socket %s", self._sock)
 

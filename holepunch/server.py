@@ -130,6 +130,8 @@ class Client:
         return holepunch.message.Message(data.decode("utf-8"))
 
     def handle(self):
+        logging.info("Handle server - client socket %s", self._sock)
+
         message = self.recv()
 
         if message.method == "<":
@@ -148,5 +150,3 @@ class Client:
 
         elif message.method == ".":
             self.close()
-
-        logging.info("Handle server - client socket %s", self._sock)
