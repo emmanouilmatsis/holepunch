@@ -8,7 +8,7 @@ except ImportError:
 setup(
         name = "holepunch",
         version = "1.0.0",
-        description = "P2P Communication Across NAT Hole Punching Server",
+        description = "P2P Communication Across NAT/Firewall Hole Punching Server",
         author = "Emmanouil Matsis",
         author_email = "emmanouilmatsis@gmail.com",
         url = "https://www.emmanouilmatsis.com",

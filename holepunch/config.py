@@ -7,7 +7,9 @@ logging.basicConfig(
     level=logging.DEBUG
 )
 
-SERVER_HOST = ""
+# Holepunch server host and port
+SERVER_HOST = "127.0.0.1" #XXX
 SERVER_PORT = 20000
 
+# Holepunch port for P2P communication behind NAT/Firewall
 HOLEPUNCH_PORT = 20001
