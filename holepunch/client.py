@@ -256,13 +256,6 @@ class TCPClient(Client):
             addr: Tuple of dest host address and dest port address.
         """
 
-        # XXX
-        #source_addr = ("", 1337)
-        #dest_addr = ("", 31337)
-        # XXX
-        source_addr = ("", 31337)
-        dest_addr = ("", 1337)
-
         # Open TCP socket for P2P communication
         sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
         sock.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
@@ -307,11 +300,6 @@ class Server:
         self._sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
         self._sock.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
         self._sock.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEPORT, 1)
-
-        # XXX
-        self._sock.bind(("127.0.0.2", holepunch.config.HOLEPUNCH_PORT))
-        # XXX
-        #self._sock.bind(("127.0.0.3", holepunch.config.HOLEPUNCH_PORT))
 
         self._sock.connect(self._addr)
 
