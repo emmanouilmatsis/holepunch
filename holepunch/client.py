@@ -7,15 +7,19 @@ which will call holepunch method on client and return a client-client P2P
 socket.
 
 Example:
-    client1_host = xxx.xxx.xxx.xxx
-    client1 = holepunch.Client()
-    client1.open() # Block waiting for holepunch response
-    client1.send("OK")
+    Listening client::
 
-    client2 = helepunch.Client()
-    client2.open(client1_host) # Block waiting for holepunch response
-    data = client2.recv()
-    print(data.decode("utf-8"))
+        client1_host = xxx.xxx.xxx.xxx
+        client1 = holepunch.Client()
+        client1.open() # Block waiting for holepunch response
+        client1.send("OK")
+
+    Connecting client::
+
+        client2 = helepunch.Client()
+        client2.open(client1_host) # Block waiting for holepunch response
+        data = client2.recv()
+        print(data.decode("utf-8"))
 """
 
 
@@ -37,7 +41,7 @@ class Client:
     Attributes:
         _server: Holepunch server socket wrapper.
         _sock:  Client-client socket.
-        _addr:  Client host address and port address tuple.
+        _addr:  Client host and port address tuple.
     """
 
     @property
@@ -104,13 +108,10 @@ class Client:
         dest_port received by server.
 
         Args:
-            dest_host: Destination host address. If dest_host is None then
-            client will receive a connect request else will send a connect
-            request.
+            dest_host: Destination host address. If dest_host is None then client will receive a connect request else will send a connect request.
 
         Raises:
-            Exception: Excpetion if socket cannot open because response is not
-            holepunch.
+            Exception: Excpetion if socket cannot open because response is not holepunch.
         """
 
         # Handle request
@@ -368,6 +369,9 @@ class Server:
 
         Send connect request (>dest_host) to server and the block wait for
         response.
+
+        Args:
+            dest_host: Destination host address.
 
         Returns:
             response: Server response.

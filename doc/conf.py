@@ -2,7 +2,7 @@
 # -*- coding: utf-8 -*-
 #
 # Holepunch documentation build configuration file, created by
-# sphinx-quickstart on Thu Jan 22 11:58:18 2015.
+# sphinx-quickstart on Thu Jan 22 13:34:45 2015.
 #
 # This file is execfile()d with the current directory set to its
 # containing dir.
@@ -71,7 +71,7 @@ release = '0'
 
 # List of patterns, relative to source directory, that match files and
 # directories to ignore when looking for source files.
-exclude_patterns = []
+exclude_patterns = ['_build']
 
 # The reST default role (used for this markup: `text`) to use for all
 # documents.
@@ -260,3 +260,6 @@ texinfo_documents = [
 
 # If true, do not generate a @detailmenu in the "Top" node's menu.
 #texinfo_no_detailmenu = False
+
+# Extras
+autodoc_member_order = 'bysource'

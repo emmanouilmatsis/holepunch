@@ -6,6 +6,11 @@ will send a holepunch response to the connect and listen client with the
 destination host address and destination port address. Holepunch server will
 bind on the address snd will set a holepunch response to the port set in config
 file.
+
+Example:
+    Server::
+
+        $ python -m holepunch server
 """
 
 
@@ -27,7 +32,7 @@ class Server:
 
     Attributes:
         _sock:  Server-client socket.
-        _addr:  Server host address and port address tuple.
+        _addr:  Server host and port address tuple.
         _rlist: Read ready file descriptors
         _wlist: Write ready file descriptors
         _xlist: Exception ready file descriptors
@@ -187,8 +192,8 @@ class Client:
 
     Attributes:
         _server: Holepunch server socket wrapper.
-        _sock:  Client - client socket.
-        _addr:  Client host address and port address tuple.
+        _sock: Client - client socket.
+        _addr: Client host and port address tuple.
     """
 
     @property

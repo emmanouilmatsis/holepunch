@@ -3,15 +3,21 @@
 Classes client.Server and server.client depend on Message for request/response
 exchange. There are 3 request and 3 responses.
 
-Request:
-    >'dest_host': connect to dest_host request
-    <: holepunch listen request
-    .: close socket request
+Messages:
 
-Response:
-    *(dest_host, dest_port): holepunch to (dest_host, dest_port) response
-    !: dest_host not found response
-    .: close socket response
+    +---------------------------+-------------------+--------------------------------------+
+    | Message                   | Type              | Description                          |
+    +===========================+===================+======================================+
+    | >dest_host                | request           | connect to dest_host                 |
+    +---------------------------+-------------------+--------------------------------------+
+    | <                         | request           | listen                               |
+    +---------------------------+-------------------+--------------------------------------+
+    | \*(dest_host, dest_port)  | response          | holepunch to (dest_host, dest_port)  |
+    +---------------------------+-------------------+--------------------------------------+
+    | !                         | response          | not found                            |
+    +---------------------------+-------------------+--------------------------------------+
+    | .                         | request/response  | close socket                         |
+    +---------------------------+-------------------+--------------------------------------+
 """
 
 
