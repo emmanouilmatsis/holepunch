@@ -31,7 +31,7 @@ import os
 # ones.
 extensions = [
     'sphinx.ext.autodoc',
-    'sphinxcontib.napoleon',
+    'sphinxcontrib.napoleon',
 ]
 
 # Add any paths that contain templates here, relative to this directory.
