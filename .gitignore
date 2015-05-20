@@ -1,6 +1,10 @@
+# Mac OS X
+.DS_Store
+
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[cod]
+*$py.class
 
 # C extensions
 *.so
@@ -13,6 +17,7 @@ develop-eggs/
 dist/
 downloads/
 eggs/
+.eggs/
 lib/
 lib64/
 parts/
@@ -36,9 +41,11 @@ pip-delete-this-directory.txt
 htmlcov/
 .tox/
 .coverage
+.coverage.*
 .cache
 nosetests.xml
 coverage.xml
+*,cover
 
 # Translations
 *.mo
@@ -48,12 +55,7 @@ coverage.xml
 *.log
 
 # Sphinx documentation
-doc/_build/
-doc/_static/
-doc/_templates/
+docs/_build/
 
 # PyBuilder
 target/
-
-# Virtualenv
-venv/
